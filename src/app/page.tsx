@@ -12,6 +12,8 @@ export default function Home() {
             <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
             <h1 className="ml-4 my-2">Latihan Ujian</h1>
           </div>
+
+          {/* Main item start */}
           <div className="flex gap-5 items-start text-xs font-medium text-black max-md:flex-wrap">
             <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
               <div className="flex gap-2.5 text-base whitespace-nowrap">
@@ -69,6 +71,15 @@ export default function Home() {
                 Lihat Soal
               </button>
             </div>
+          </div>
+          {/* Main item finish */}
+
+          <div className="mt-10">
+            <div className="flex items-center">
+              <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
+              <h1 className="ml-4 my-2">Program Pendampingan</h1>
+            </div>
+            <div className="gap-0 mt-9 w-full bg-indigo-600 rounded-3xl min-h-[235px] max-md:flex-wrap max-md:max-w-full" />
           </div>
         </div>
       </div>
