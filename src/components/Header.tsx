@@ -16,12 +16,12 @@ const Header = () => {
           </div>
         </div>
         <div className="flex gap-5 justify-between my-auto text-base">
-          <div className="justify-center px-6 py-3.5 bg-blue-500 rounded-lg max-md:px-5">
+          <button className="justify-center px-6 py-3.5 bg-blue-500 rounded-lg max-md:px-5">
             Download Now
-          </div>
-          <div className="justify-center px-5 py-3.5 whitespace-nowrap bg-blue-500 rounded-lg">
+          </button>
+          <button className="justify-center px-5 py-3.5 whitespace-nowrap bg-blue-500 rounded-lg">
             Logout
-          </div>
+          </button>
         </div>
       </div>
     </header>
