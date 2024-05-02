@@ -2,7 +2,7 @@ import React from "react";
 
 const Header = () => {
   return (
-    <header>
+    <header className="sticky top-0">
       <div className="flex gap-5 justify-between px-11 py-3.5 font-medium text-white bg-blue-700 max-md:flex-wrap max-md:px-5">
         <div className="flex gap-5 items-center text-2xl">
           <img
@@ -16,7 +16,7 @@ const Header = () => {
             loading="lazy"
           />
           <div className="flex-auto self-stretch my-auto">
-            Hi, Maura Diviarani
+            Hi, Anto Tolo
           </div>
         </div>
         <div className="flex gap-5 justify-between my-auto text-base">
