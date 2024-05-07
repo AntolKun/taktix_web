@@ -1,8 +1,10 @@
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+"use client"
+import React, { useState } from "react";
 import Link from "next/link";
+import SearchBar from "@/components/Searchbar";
 
 export default function Home() {
+
   return (
     <div className="mx-40 my-14">
       <div className="flex items-center">
@@ -56,7 +58,10 @@ export default function Home() {
           <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
             Latihan Ujian Kedinasan
           </div>
-          <Link href={"/kedinasan"} className="justify-center self-end px-3 py-2 mt-2.5 bg-yellow-400 rounded">
+          <Link
+            href={"/kedinasan"}
+            className="justify-center self-end px-3 py-2 mt-2.5 bg-yellow-400 rounded"
+          >
             Lihat Soal
           </Link>
         </div>
@@ -70,7 +75,10 @@ export default function Home() {
           <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
             Semua soal yang tersedia
           </div>
-          <Link href={"/semua"} className="justify-center self-end px-3 py-2 mt-2.5 bg-yellow-400 rounded">
+          <Link
+            href={"/semua"}
+            className="justify-center self-end px-3 py-2 mt-2.5 bg-yellow-400 rounded"
+          >
             Lihat Soal
           </Link>
         </div>

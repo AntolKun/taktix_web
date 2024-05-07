@@ -2,9 +2,9 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
-  faUsers,
-  faMoneyBillAlt,
+  faGraduationCap,
   faUser,
+  faPencil
 } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = () => {
@@ -40,9 +40,9 @@ const Sidebar = () => {
                 href="#"
                 className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
               >
-                <FontAwesomeIcon icon={faUsers} className="size-5 opacity-75" />
+                <FontAwesomeIcon icon={faGraduationCap} className="size-5 opacity-75" />
                 <span className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible">
-                  Teams
+                  Universitas
                 </span>
               </a>
             </li>
@@ -53,11 +53,11 @@ const Sidebar = () => {
                 className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
               >
                 <FontAwesomeIcon
-                  icon={faMoneyBillAlt}
+                  icon={faPencil}
                   className="size-5 opacity-75"
                 />
                 <span className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible">
-                  Billing
+                  Program
                 </span>
               </a>
             </li>
@@ -69,7 +69,7 @@ const Sidebar = () => {
               >
                 <FontAwesomeIcon icon={faUser} className="size-5 opacity-75" />
                 <span className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible">
-                  Account
+                  Profile
                 </span>
               </a>
             </li>
