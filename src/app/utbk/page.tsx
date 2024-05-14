@@ -15,16 +15,16 @@ export default function UTBK() {
 
   return (
     <div className="mx-14 my-14">
-      <form className="max-w-lg mx-auto">
+      {/* <form className="max-w-lg mx-auto">
         <div className="flex">
-          <div className="w-full py-6 pb-8">
-            <div className="relative inline-block">
+          <div className="w-full py-6 pb-8 flex">
+            <div className="relative inline-block mr-2">
               <button
                 type="button"
                 className="px-4 py-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm inline-flex items-center"
                 onClick={toggleDropdown}
               >
-                Dropdown{" "}
+                Pilih Kategori{" "}
                 <svg
                   className="w-2.5 h-2.5 ml-2.5"
                   aria-hidden="true"
@@ -80,7 +80,137 @@ export default function UTBK() {
                 </div>
               )}
             </div>
-          </div>  
+
+            <div className="relative inline-block">
+              <label htmlFor="Search" className="sr-only">
+                {" "}
+                Search{" "}
+              </label>
+
+              <input
+                type="text"
+                id="Search"
+                placeholder="Search for..."
+                className="w-full rounded-md border-gray-200 py-2.5 pe-10 shadow-sm sm:text-sm"
+              />
+
+              <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
+                <button
+                  type="button"
+                  className="text-gray-600 hover:text-gray-700"
+                >
+                  <span className="sr-only">Search</span>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    className="h-4 w-4"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                    />
+                  </svg>
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </form> */}
+
+      <form className="max-w-lg mx-auto">
+        <div className="flex">
+          <div className="w-full py-6 pb-8 flex">
+            <div className="relative inline-block mr-2">
+              <button
+                type="button"
+                className="px-4 py-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm inline-flex items-center border border-blue-500"
+                onClick={toggleDropdown}
+              >
+                Pilih Kategori{" "}
+                <svg
+                  className="w-2.5 h-2.5 ml-2.5"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m1 1 4 4 4-4"
+                  />
+                </svg>
+              </button>
+
+              {isOpen && (
+                <div className="origin-top-right absolute right-0 mt-2 w-44 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                  <ul
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="options-menu"
+                  >
+                    <li>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={closeDropdown}
+                      >
+                        Option 1
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={closeDropdown}
+                      >
+                        Option 2
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={closeDropdown}
+                      >
+                        Option 3
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            <div className="relative inline-block">
+              <label htmlFor="Search" className="sr-only">
+                Search
+              </label>
+
+              <input
+                type="text"
+                id="Search"
+                placeholder="Search for..."
+                className="w-full rounded-md bg-white py-2.5 pe-10 shadow-sm sm:text-sm"
+              />
+
+              <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
+                <button
+                  type="button"
+                  className="text-gray-600 hover:text-gray-700"
+                >
+                  <span className="sr-only">Search</span>
+                  <i className="fas fa-search"></i> {/* Font Awesome icon */}
+                </button>
+              </span>
+            </div>
+          </div>
         </div>
       </form>
 

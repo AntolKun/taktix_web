@@ -37,10 +37,13 @@ const Sidebar = () => {
           <ul className="space-y-1 border-t border-gray-100 pt-4">
             <li>
               <a
-                href="#"
+                href={"/universitas"}
                 className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
               >
-                <FontAwesomeIcon icon={faGraduationCap} className="size-5 opacity-75" />
+                <FontAwesomeIcon
+                  icon={faGraduationCap}
+                  className="size-5 opacity-75"
+                />
                 <span className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible">
                   Universitas
                 </span>
@@ -64,7 +67,7 @@ const Sidebar = () => {
 
             <li>
               <a
-                href="#"
+                href={"/profile"}
                 className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
               >
                 <FontAwesomeIcon icon={faUser} className="size-5 opacity-75" />
