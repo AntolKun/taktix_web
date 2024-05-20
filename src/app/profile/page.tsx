@@ -58,7 +58,7 @@ export default function Profile() {
           </Link>
         </div>
         <div className="justify-center py-3.5 mt-1 w-full text-base bg-white border-b border-solid border-stone-300 max-md:max-w-full">
-          <Link href="" className="row">
+          <Link href={"/profile/ubahpassword"} className="row">
             <span>Ubah Password</span>
             <FontAwesomeIcon
               icon={faChevronRight}

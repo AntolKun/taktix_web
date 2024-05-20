@@ -1,98 +1,103 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
-import SearchBar from "@/components/Searchbar";
 
-export default function Home() {
+export default function Program() {
+  const router = useRouter();
+
   return (
     <div className="mx-40 my-14">
-      <div className="flex items-center">
-        <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-        <h1 className="ml-4 my-2">Latihan Ujian</h1>
+      <div className="flex items-center ">
+        <button type="button" className="mt-1" onClick={() => router.back()}>
+          <FontAwesomeIcon icon={faArrowLeft} className="size-5 opacity-75" />
+        </button>
+        <h1 className="ml-4 my-2">Program</h1>
       </div>
 
-      {/* Main item start */}
-      <div className="flex gap-5 items-start text-xs font-medium text-black max-md:flex-wrap mt-4">
-        <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-          <div className="flex gap-2.5 text-base whitespace-nowrap">
-            <div className="flex items-center">
-              <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-              <h1 className="ml-2 my-2">UTBK</h1>
-            </div>
-          </div>
-          <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-            Ujian Tulis Berbasis Komputer
-          </div>
-          <Link
-            href={"/utbk"}
-            className="justify-center self-end px-3.5 py-2 mt-2.5 bg-yellow-400 rounded"
-          >
-            Lihat Soal
-          </Link>
-        </div>
-        <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-          <div className="flex gap-2.5 text-base whitespace-nowrap">
-            <div className="flex items-center">
-              <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-              <h1 className="ml-2 my-2">CPNS</h1>
-            </div>
-          </div>
-          <div className="mx-3 mt-1.5 text-neutral-500 max-md:mx-2.5">
-            Ujian Calon Pegawai Negeri Sipil
-          </div>
-          <Link
-            href={"/cpns"}
-            className="justify-center self-end px-3.5 py-2 mt-2.5 bg-yellow-400 rounded"
-          >
-            Lihat Soal
-          </Link>
-        </div>
-        <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-          <div className="flex gap-2.5 text-base">
-            <div className="flex items-center">
-              <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-              <h1 className="ml-2 my-2">Kedinasan</h1>
-            </div>
-          </div>
-          <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-            Latihan Ujian Kedinasan
-          </div>
-          <Link
-            href={"/kedinasan"}
-            className="justify-center self-end px-3 py-2 mt-2.5 bg-yellow-400 rounded"
-          >
-            Lihat Soal
-          </Link>
-        </div>
-        <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-          <div className="flex gap-2.5 text-base">
-            <div className="flex items-center">
-              <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-              <h1 className="ml-2 my-2">Lihat Semua</h1>
-            </div>
-          </div>
-          <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-            Semua soal yang tersedia
-          </div>
-          <Link
-            href={"/semua"}
-            className="justify-center self-end px-3 py-2 mt-2.5 bg-yellow-400 rounded"
-          >
-            Lihat Soal
-          </Link>
-        </div>
-      </div>
-      {/* Main item finish */}
+      <div className="px-5 grid grid-cols-3 flex-wrap">
+        <a href="" className="block rounded-lg p-4 shadow-sm shadow-indigo-100 mt-5 mr-5">
+          <img
+            alt=""
+            src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+            className="h-48 rounded-md object-cover w-full"
+          />
 
-      {/* Program pendampingan start */}
-      <div className="mt-7">
-        <div className="flex items-center">
-          <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-          <h1 className="ml-4 my-2">Program Pendampingan</h1>
-        </div>
-        <div className="gap-0 mt-5 w-full bg-indigo-600 rounded-3xl min-h-[235px] max-md:flex-wrap max-md:max-w-full" />
+          <div className="mt-2">
+            <dl>
+
+              <div>
+                <p className="font-medium">Tryout Nasional UTBK 2024</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Gratis</p>
+              </div>
+            </dl>
+          </div>
+        </a>
+
+        <a href="" className="block rounded-lg p-4 shadow-sm shadow-indigo-100 mt-5 mr-5">
+          <img
+            alt=""
+            src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+            className="h-48 rounded-md object-cover w-full"
+          />
+
+          <div className="mt-2">
+            <dl>
+
+              <div>
+                <p className="font-medium">Tryout Nasional UTBK 2024</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Gratis</p>
+              </div>
+            </dl>
+          </div>
+        </a>
+
+        <a href="" className="block rounded-lg p-4 shadow-sm shadow-indigo-100 mt-5 mr-5">
+          <img
+            alt=""
+            src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+            className="h-48 rounded-md object-cover w-full"
+          />
+
+          <div className="mt-2">
+            <dl>
+
+              <div>
+                <p className="font-medium">Tryout Nasional UTBK 2024</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Gratis</p>
+              </div>
+            </dl>
+          </div>
+        </a>
+
+        <a href="" className="block rounded-lg p-4 shadow-sm shadow-indigo-100 mt-5 mr-5">
+          <img
+            alt=""
+            src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+            className="h-48 rounded-md object-cover w-full"
+          />
+
+          <div className="mt-2">
+            <dl>
+
+              <div>
+                <p className="font-medium">Tryout Nasional UTBK 2024</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Gratis</p>
+              </div>
+            </dl>
+          </div>
+        </a>
       </div>
-      {/* Program pendampingan finish */}
     </div>
   );
 }
