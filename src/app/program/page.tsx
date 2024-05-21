@@ -18,7 +18,7 @@ export default function Program() {
       </div>
 
       <div className="px-5 grid grid-cols-3 flex-wrap">
-        <a href="" className="block rounded-lg p-4 shadow-sm shadow-indigo-100 mt-5 mr-5">
+        <a href={"/program/programDetail"} className="block rounded-lg p-4 shadow-sm shadow-indigo-100 mt-5 mr-5">
           <img
             alt=""
             src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
