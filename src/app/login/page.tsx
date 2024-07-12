@@ -181,7 +181,7 @@ export default function LoginPage() {
       if (response.data.error) {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          username: "Username is already taken",
+          username: "Username sudah terpakai",
         }));
         return false;
       }
@@ -190,7 +190,7 @@ export default function LoginPage() {
       console.error("Error validating username:", error);
       setErrors((prevErrors) => ({
         ...prevErrors,
-        username: "Failed to validate username",
+        username: "Username tidak bisa tervalidasi",
       }));
       return false;
     }
@@ -213,7 +213,7 @@ export default function LoginPage() {
       if (response.data.error) {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          emailPhone: "Email or phone number is already taken",
+          emailPhone: "Email atau Nomor Telepon sudah terdaftar",
         }));
         return false;
       }
@@ -222,7 +222,7 @@ export default function LoginPage() {
       console.error("Error validating email/phone:", error);
       setErrors((prevErrors) => ({
         ...prevErrors,
-        emailPhone: "Failed to validate email/phone",
+        emailPhone: "Email/Nomor Telepon tidak bisa tervalidasi",
       }));
       return false;
     }
