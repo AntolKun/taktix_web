@@ -11,13 +11,13 @@ export default function ClientLayout({
 }) {
 	const pathname = usePathname();
 
-	const isLoginPage = pathname === "/login";
+	const isRegisterPage = pathname === "/register";
 
 	return (
 		<main className="flex">
-			{!isLoginPage && <Sidebar />}
+			{!isRegisterPage && <Sidebar />}
 			<div className="flex-grow">
-				{!isLoginPage && <Header />}
+				{!isRegisterPage && <Header />}
 				{children}
 			</div>
 		</main>

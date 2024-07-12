@@ -317,7 +317,7 @@ export default function LoginPage() {
                 <h1 className="text-2xl xl:text-4xl font-extrabold text-blue-900">
                   Registrasi
                 </h1>
-                <p className="text-[12px] text-gray-500">
+                <p className="text-[12px] mt-4 text-gray-500">
                   Silahkan registrasi akun anda
                 </p>
               </div>
