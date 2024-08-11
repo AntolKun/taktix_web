@@ -1,15 +1,37 @@
-"use client"
-import React, { useState } from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import SearchBar from "@/components/Searchbar";
+import { jwtDecode } from "jwt-decode"; // Import the correct jwt-decode package
 
 export default function Home() {
+  const [name, setName] = useState("");
+  const [photoProfile, setPhotoProfile] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded: any = jwtDecode(token);
+        const user = decoded.user;
+        setName(user.name);
+        setPhotoProfile(user.photo_profile);
+      } catch (error) {
+        console.error("Invalid token:", error);
+        setName(""); // Clear name and photoProfile in case of token error
+        setPhotoProfile("");
+      }
+    }
+  }, []);
 
   return (
     <div className="mx-40 my-14">
-      <div className="flex items-center">
-        <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-        <h1 className="ml-4 my-2">Latihan Ujian</h1>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
+          <h1 className="ml-4 my-2">Latihan Ujian</h1>
+        </div>
+        <div className="flex items-center">
+          </div>
       </div>
 
       {/* Main item start */}
@@ -49,7 +71,7 @@ export default function Home() {
           </Link>
         </div>
         <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-          <div className="flex gap-2.5 text-base">
+          <div className="flex gap-2.5 text-base whitespace-nowrap">
             <div className="flex items-center">
               <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
               <h1 className="ml-2 my-2">Kedinasan</h1>
@@ -60,13 +82,13 @@ export default function Home() {
           </div>
           <Link
             href={"/kedinasan"}
-            className="justify-center self-end px-3 py-2 mt-2.5 bg-yellow-400 rounded"
+            className="justify-center self-end px-3.5 py-2 mt-2.5 bg-yellow-400 rounded"
           >
             Lihat Soal
           </Link>
         </div>
         <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-          <div className="flex gap-2.5 text-base">
+          <div className="flex gap-2.5 text-base whitespace-nowrap">
             <div className="flex items-center">
               <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
               <h1 className="ml-2 my-2">Lihat Semua</h1>
@@ -77,7 +99,7 @@ export default function Home() {
           </div>
           <Link
             href={"/semua"}
-            className="justify-center self-end px-3 py-2 mt-2.5 bg-yellow-400 rounded"
+            className="justify-center self-end px-3.5 py-2 mt-2.5 bg-yellow-400 rounded"
           >
             Lihat Soal
           </Link>
@@ -91,7 +113,9 @@ export default function Home() {
           <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
           <h1 className="ml-4 my-2">Program Pendampingan</h1>
         </div>
-        <div className="gap-0 mt-5 w-full bg-indigo-600 rounded-3xl min-h-[235px] max-md:flex-wrap max-md:max-w-full" />
+        <div className="gap-0 mt-5 w-full bg-indigo-600 rounded-3xl min-h-[235px] max-md:flex-wrap max-md:max-w-full">
+          {/* Add content for Program Pendampingan here */}
+        </div>
       </div>
       {/* Program pendampingan finish */}
     </div>
