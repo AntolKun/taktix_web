@@ -1,7 +1,8 @@
-"use client"
+"use client";
 import { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
 import Link from "next/link";
+import Swal from "sweetalert2";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -115,10 +116,25 @@ export default function LoginPage() {
         }
       );
       console.log(response.data);
-      alert("Registration successful!");
+
+      // Menggunakan SweetAlert untuk sukses registrasi
+      Swal.fire({
+        title: "Registrasi berhasil",
+        text: "Silahkan cek email untuk konfirmasi",
+        icon: "success",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#81f542",
+      });
     } catch (error) {
       console.error("Error registering:", error);
-      alert("Registration failed!");
+
+      // Jika gagal, menampilkan pesan error dengan SweetAlert
+      Swal.fire({
+        title: "Registrasi gagal",
+        text: "Terjadi kesalahan saat registrasi. Silahkan coba lagi.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -188,90 +204,90 @@ export default function LoginPage() {
                   Silahkan registrasi akun anda
                 </p>
               </div>
-              <div className="w-full flex-1 mt-8">
-                <form
-                  onSubmit={handleSubmit}
-                  className="mx-auto max-w-xs flex flex-col gap-4"
-                >
+              <form onSubmit={handleSubmit} className="w-full flex-1 mt-8">
+                <div className="mx-auto max-w-xs">
                   <input
-                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm"
                     type="text"
                     name="name"
-                    placeholder="Nama"
-                    value={formData.name}
+                    placeholder="Nama Lengkap"
                     onChange={handleChange}
+                    value={formData.name}
                   />
                   <input
-                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm mt-4"
                     type="text"
                     name="username"
                     placeholder="Username"
-                    value={formData.username}
                     onChange={handleChange}
+                    value={formData.username}
                   />
                   {errors.username && (
-                    <p className="text-red-500 text-xs">{errors.username}</p>
+                    <p className="text-red-500 text-sm">{errors.username}</p>
                   )}
                   <input
-                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm mt-4"
                     type="email"
                     name="email"
                     placeholder="Email"
-                    value={formData.email}
                     onChange={handleChange}
+                    value={formData.email}
                   />
                   <input
-                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                    type="tel"
+                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm mt-4"
+                    type="text"
                     name="phone_number"
                     placeholder="Nomor Telepon"
-                    value={formData.phone_number}
                     onChange={handleChange}
+                    value={formData.phone_number}
                   />
                   {errors.emailPhone && (
-                    <p className="text-red-500 text-xs">{errors.emailPhone}</p>
+                    <p className="text-red-500 text-sm">{errors.emailPhone}</p>
                   )}
                   <input
-                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm mt-4"
                     type="password"
                     name="password"
                     placeholder="Password"
-                    value={formData.password}
                     onChange={handleChange}
+                    value={formData.password}
                   />
                   <input
-                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm mt-4"
                     type="password"
                     name="password_confirmation"
                     placeholder="Konfirmasi Password"
-                    value={formData.password_confirmation}
                     onChange={handleChange}
+                    value={formData.password_confirmation}
                   />
-                  <button className="mt-5 tracking-wide font-semibold bg-blue-900 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+                  <button
+                    type="submit"
+                    className="mt-4 w-full tracking-wide font-semibold bg-blue-500 text-gray-100 w-full py-4 rounded-lg hover:bg-blue-600 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                  >
                     <svg
                       className="w-6 h-6 -ml-2"
                       fill="none"
                       stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                      <circle cx="8.5" cy="7" r="4" />
-                      <path d="M20 8v6M23 11h-6" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2m16-10V5a2 2 0 00-2-2h-3.5a2 2 0 00-2 2v6m4 10h-4"
+                      ></path>
                     </svg>
-                    <span className="ml-3">Registrasi</span>
+                    <span className="ml-3">Daftar</span>
                   </button>
-                  <p className="mt-6 text-xs text-gray-600 text-center">
-                    Sudah Punya Akun?{" "}
-                    <Link href="/login">
-                      <span className="text-blue-900 font-semibold">
-                        Login
-                      </span>
+                  <p className="mt-8 text-sm text-gray-500 text-center">
+                    Sudah memiliki akun?{" "}
+                    <Link href="/login" className="border-b border-gray-500">
+                      Login disini
                     </Link>
                   </p>
-                </form>
-              </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -279,4 +295,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

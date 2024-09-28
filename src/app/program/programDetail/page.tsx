@@ -1,9 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
 
 export default function Program() {
   const router = useRouter();
@@ -24,8 +23,6 @@ export default function Program() {
         </div>
       </div>
 
-      {/* <div className="px-5 grid grid-cols-3 flex-wrap"></div> */}
-
       <div className="flex flex-col px-5 text-xl font-medium text-black max-w-[878px]">
         <div className="w-full max-md:max-w-full">Deskripsi</div>
         <div className="mt-2 w-full text-base max-md:max-w-full">
@@ -45,50 +42,69 @@ export default function Program() {
       </div>
 
       <div className="flex gap-5 justify-between px-5 text-base text-black max-md:flex-wrap">
+        {/* SVG untuk Passing Grade */}
         <div className="flex flex-col p-3.5 bg-white rounded-2xl border border-solid border-stone-300">
           <img
             loading="lazy"
-            srcSet="..."
+            src="/Passing Grade.svg"
+            alt="Passing Grade"
             className="self-center w-12 aspect-[1.18]"
           />
-          <div className="mt-5">Passing Grade</div>
+          <a href="/universitas">
+            <div className="mt-5">Passing Grade</div>
+          </a>
         </div>
+
+        {/* SVG untuk Try Out */}
         <div className="flex flex-col px-9 py-3 bg-white rounded-2xl border border-solid border-stone-300 max-md:px-5">
           <img
             loading="lazy"
-            srcSet="..."
+            src="/Try Out.svg"
+            alt="Try Out"
             className="self-center w-12 aspect-square"
           />
           <div className="mt-4">Try Out</div>
         </div>
+
+        {/* SVG untuk Group Konsultasi */}
         <div className="flex flex-col px-1.5 py-3 bg-white rounded-2xl border border-solid border-stone-300">
           <img
             loading="lazy"
-            srcSet="..."
+            src="/Group Konsultasi.svg"
+            alt="Group Konsultasi"
             className="self-center aspect-[1.12] w-[53px]"
           />
           <div className="mt-4">Group Konsultasi</div>
         </div>
+
+        {/* SVG untuk Materi */}
         <div className="flex flex-col px-9 pt-px pb-4 whitespace-nowrap bg-white rounded-2xl border border-solid border-stone-300 max-md:px-5">
           <img
             loading="lazy"
-            srcSet="..."
+            src="/Materi.svg"
+            alt="Materi"
             className="self-center w-12 aspect-[0.76]"
           />
           <div className="mt-2">Materi</div>
         </div>
+
+        {/* SVG untuk Party Belajar */}
         <div className="flex flex-col px-5 py-3 bg-white rounded-2xl border border-solid border-stone-300">
           <img
             loading="lazy"
-            srcSet="..."
+            src="/Party Belajar.svg"
+            alt="Party Belajar"
             className="self-center aspect-[1.12] w-[54px]"
           />
           <div className="mt-3.5">Party Belajar</div>
         </div>
+
+        {/* SVG untuk Jadwal Pendampingan */}
         <div className="flex flex-col px-5 py-3 bg-white rounded-2xl border border-solid border-stone-300">
           <img
             loading="lazy"
-            srcSet="..."
+            src="/Jadwal Pendampingan.svg"
+            alt="Jadwal Pendampingan"
             className="self-center aspect-[1.12] w-[54px]"
           />
           <div className="mt-3.5 text-wrap">Jadwal Pendampingan</div>

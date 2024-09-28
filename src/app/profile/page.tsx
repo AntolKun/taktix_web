@@ -65,11 +65,13 @@ export default function Profile() {
         <div className="w-full max-md:max-w-full">Menu</div>
         <div className="justify-center py-3.5 mt-1 w-full text-base bg-white border-b border-solid border-stone-300 max-md:max-w-full">
           <Link href="">
-            <span>Soal Ujian Saya</span>
-            <FontAwesomeIcon
-              icon={faChevronRight}
-              className="size-5 opacity-75 ml-96"
-            />
+            <div className="flex justify-between items-center">
+              <span>Soal Ujian Saya</span>
+              <FontAwesomeIcon
+                icon={faChevronRight}
+                className="size-5 opacity-75"
+              />
+            </div>
           </Link>
         </div>
       </div>
@@ -77,33 +79,40 @@ export default function Profile() {
       <div className="mx-auto mt-8 flex flex-col px-5 text-lg font-semibold text-black max-w-[619px]">
         <div className="w-full max-md:max-w-full">Profile</div>
         <div className="justify-center py-3.5 mt-1 w-full text-base bg-white border-b border-solid border-stone-300 max-md:max-w-full">
-          <Link href={"/profile/ubahprofile"} className="row">
-            <span>Ubah Profile</span>
-            <FontAwesomeIcon
-              icon={faChevronRight}
-              className="size-5 opacity-75 ml-96"
-            />
+          <Link href="/profile/ubahprofile">
+            <div className="flex justify-between items-center">
+              <span>Ubah Profile</span>
+              <FontAwesomeIcon
+                icon={faChevronRight}
+                className="size-5 opacity-75"
+              />
+            </div>
           </Link>
         </div>
         <div className="justify-center py-3.5 mt-1 w-full text-base bg-white border-b border-solid border-stone-300 max-md:max-w-full">
-          <Link href={"/profile/ubahpassword"} className="row">
-            <span>Ubah Password</span>
-            <FontAwesomeIcon
-              icon={faChevronRight}
-              className="size-5 opacity-75 ml-96"
-            />
+          <Link href="/profile/ubahpassword">
+            <div className="flex justify-between items-center">
+              <span>Ubah Password</span>
+              <FontAwesomeIcon
+                icon={faChevronRight}
+                className="size-5 opacity-75"
+              />
+            </div>
           </Link>
         </div>
         <div className="justify-center py-3.5 mt-1 w-full text-base bg-white border-b border-solid border-stone-300 max-md:max-w-full">
-          <Link href="" className="row">
-            <span>Hapus Akun</span>
-            <FontAwesomeIcon
-              icon={faChevronRight}
-              className="size-5 opacity-75 ml-96"
-            />
+          <Link href="">
+            <div className="flex justify-between items-center">
+              <span>Hapus Akun</span>
+              <FontAwesomeIcon
+                icon={faChevronRight}
+                className="size-5 opacity-75"
+              />
+            </div>
           </Link>
         </div>
       </div>
     </div>
   );
 }
+

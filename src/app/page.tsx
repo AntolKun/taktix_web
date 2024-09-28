@@ -30,8 +30,7 @@ export default function Home() {
           <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
           <h1 className="ml-4 my-2">Latihan Ujian</h1>
         </div>
-        <div className="flex items-center">
-          </div>
+        <div className="flex items-center"></div>
       </div>
 
       {/* Main item start */}
@@ -113,9 +112,11 @@ export default function Home() {
           <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
           <h1 className="ml-4 my-2">Program Pendampingan</h1>
         </div>
-        <div className="gap-0 mt-5 w-full bg-indigo-600 rounded-3xl min-h-[235px] max-md:flex-wrap max-md:max-w-full">
-          {/* Add content for Program Pendampingan here */}
-        </div>
+        <Link href="/program">
+          <div className="gap-0 mt-5 w-full bg-indigo-600 rounded-3xl min-h-[235px] max-md:flex-wrap max-md:max-w-full cursor-pointer">
+            {/* Add content for Program Pendampingan here */}
+          </div>
+        </Link>
       </div>
       {/* Program pendampingan finish */}
     </div>
