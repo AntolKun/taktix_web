@@ -1,790 +1,105 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { jwtDecode } from "jwt-decode";
 
 export default function UTBK() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [photoProfile, setPhotoProfile] = useState("");
+  const [exams, setExams] = useState([]);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
-  const closeDropdown = () => {
-    setIsOpen(false);
+    if (token) {
+      try {
+        const decoded: any = jwtDecode(token);
+        const user = decoded.user;
+        setName(user.name);
+        setPhotoProfile(user.photo_profile);
+
+        // Fetch exams after getting the token
+        fetchExams(token);
+      } catch (error) {
+        console.error("Invalid token:", error);
+        setName("");
+        setPhotoProfile("");
+      }
+    }
+  }, []);
+
+  const fetchExams = async (token: string) => {
+    try {
+      const response = await fetch(
+        "https://api.taktix.co.id/exam?page=1&per_page=5000&category_id=4001",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch exams");
+      }
+
+      const data = await response.json();
+      setExams(data.data); // Set exams data to state
+    } catch (error) {
+      console.error("Error fetching exams:", error);
+    }
   };
 
   return (
-    <div className="mx-14 my-14">
-      {/* <form className="max-w-lg mx-auto">
-        <div className="flex">
-          <div className="w-full py-6 pb-8 flex">
-            <div className="relative inline-block mr-2">
-              <button
-                type="button"
-                className="px-4 py-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm inline-flex items-center"
-                onClick={toggleDropdown}
-              >
-                Pilih Kategori{" "}
-                <svg
-                  className="w-2.5 h-2.5 ml-2.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 10 6"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="m1 1 4 4 4-4"
-                  />
-                </svg>
-              </button>
-
-              {isOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-44 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  <ul
-                    role="menu"
-                    aria-orientation="vertical"
-                    aria-labelledby="options-menu"
-                  >
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={closeDropdown}
-                      >
-                        Option 1
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={closeDropdown}
-                      >
-                        Option 2
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={closeDropdown}
-                      >
-                        Option 3
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            <div className="relative inline-block">
-              <label htmlFor="Search" className="sr-only">
-                {" "}
-                Search{" "}
-              </label>
-
-              <input
-                type="text"
-                id="Search"
-                placeholder="Search for..."
-                className="w-full rounded-md border-gray-200 py-2.5 pe-10 shadow-sm sm:text-sm"
-              />
-
-              <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
-                <button
-                  type="button"
-                  className="text-gray-600 hover:text-gray-700"
-                >
-                  <span className="sr-only">Search</span>
-
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    className="h-4 w-4"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                    />
-                  </svg>
-                </button>
-              </span>
-            </div>
-          </div>
+    <div className="mx-40 my-14">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
+          <h1 className="ml-4 my-2">Latihan Ujian UTBK</h1>
         </div>
-      </form> */}
-
-      <form className="max-w-lg mx-auto">
-        <div className="flex">
-          <div className="w-full py-6 pb-8 flex">
-            <div className="relative inline-block mr-2">
-              <button
-                type="button"
-                className="px-4 py-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm inline-flex items-center border border-blue-500"
-                onClick={toggleDropdown}
-              >
-                Pilih Kategori{" "}
-                <svg
-                  className="w-2.5 h-2.5 ml-2.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 10 6"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="m1 1 4 4 4-4"
-                  />
-                </svg>
-              </button> 
-
-              {isOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-44 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  <ul
-                    role="menu"
-                    aria-orientation="vertical"
-                    aria-labelledby="options-menu"
-                  >
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={closeDropdown}
-                      >
-                        Option 1
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={closeDropdown}
-                      >
-                        Option 2
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={closeDropdown}
-                      >
-                        Option 3
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            <div className="relative inline-block">
-              <label htmlFor="Search" className="sr-only">
-                Search
-              </label>
-
-              <input
-                type="text"
-                id="Search"
-                placeholder="Search for..."
-                className="w-full rounded-md bg-white py-2.5 pe-10 shadow-sm sm:text-sm"
-              />
-
-              <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
-                <button
-                  type="button"
-                  className="text-gray-600 hover:text-gray-700"
-                >
-                  <span className="sr-only">Search</span>
-                  <i className="fas fa-search"></i> {/* Font Awesome icon */}
-                </button>
-              </span>
-            </div>
-          </div>
-        </div>
-      </form>
-
-      <div className="flex items-center">
-        <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-        <h1 className="ml-4 my-2">Soal Latihan Ujian</h1>
       </div>
 
       {/* Main item start */}
-      <div className="grid grid-cols-4 flex-wrap gap-4 items-start text-xs font-medium text-black max-md:flex-wrap mt-4">
-        <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-          <div className="flex gap-2.5 text-base whitespace-nowrap">
-            <div className="flex items-center">
-              <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-              <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
+      <div className="grid grid-cols-4 gap-4 text-xs font-medium text-black mt-4 max-md:flex-wrap">
+        {exams.map((exam: any) => (
+          <div
+            key={exam.id}
+            className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500"
+            style={{ minHeight: "100px" }} // Menyediakan tinggi minimum yang konsisten
+          >
+            {/* Heading and Title */}
+            <div className="flex gap-2.5 text-base whitespace-normal break-words">
+              <div className="flex items-center">
+                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
+                <h1 className="ml-2 my-2">{exam.title}</h1>
+              </div>
             </div>
-          </div>
-          <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-            UTBK - Kemampuan Penalaran Umum
-          </div>
-          <div className="flex gap-5 justify-between mt-1">
-            <div className="gap-0 my-auto text-neutral-400">
-              25 Soal 25 Menit
-            </div>
-            <Link
-              href={""}
-              className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-            >
-              Gratis
-            </Link>
-          </div>
-        </div>
 
-        <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-          <div className="flex gap-2.5 text-base whitespace-nowrap">
-            <div className="flex items-center">
-              <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-              <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
+            {/* Category Info */}
+            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
+              Kategori: {exam.category.name}
             </div>
-          </div>
-          <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-            UTBK - Kemampuan Penalaran Umum
-          </div>
-          <div className="flex gap-5 justify-between mt-1">
-            <div className="gap-0 my-auto text-neutral-400">
-              25 Soal 25 Menit
-            </div>
-            <Link
-              href={""}
-              className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-            >
-              Gratis
-            </Link>
-          </div>
-        </div>
 
-        <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-          <div className="flex gap-2.5 text-base whitespace-nowrap">
-            <div className="flex items-center">
-              <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-              <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
+            {/* Footer (Question Count, Duration, and Link) */}
+            <div className="flex gap-5 justify-between mt-auto">
+              {" "}
+              {/* mt-auto forces the footer to stick at the bottom */}
+              <div className="gap-0 my-auto text-neutral-400">
+                {exam.total_question} Soal {exam.duration} Menit
+              </div>
+              <Link
+                href={`/soal/${exam.id}`}
+                className="justify-center px-3.5 py-2 bg-green-400 text-white rounded"
+              >
+                Gratis
+              </Link>
             </div>
           </div>
-          <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-            UTBK - Kemampuan Penalaran Umum
-          </div>
-          <div className="flex gap-5 justify-between mt-1">
-            <div className="gap-0 my-auto text-neutral-400">
-              25 Soal 25 Menit
-            </div>
-            <Link
-              href={""}
-              className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-            >
-              Gratis
-            </Link>
-          </div>
-        </div>
-
-        <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-          <div className="flex gap-2.5 text-base whitespace-nowrap">
-            <div className="flex items-center">
-              <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-              <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-            </div>
-          </div>
-          <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-            UTBK - Kemampuan Penalaran Umum
-          </div>
-          <div className="flex gap-5 justify-between mt-1">
-            <div className="gap-0 my-auto text-neutral-400">
-              25 Soal 25 Menit
-            </div>
-            <Link
-              href={""}
-              className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-            >
-              Gratis
-            </Link>
-          </div>
-        </div>
-
-        <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-          <div className="flex gap-2.5 text-base whitespace-nowrap">
-            <div className="flex items-center">
-              <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-              <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-            </div>
-          </div>
-          <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-            UTBK - Kemampuan Penalaran Umum
-          </div>
-          <div className="flex gap-5 justify-between mt-1">
-            <div className="gap-0 my-auto text-neutral-400">
-              25 Soal 25 Menit
-            </div>
-            <Link
-              href={""}
-              className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-            >
-              Gratis
-            </Link>
-          </div>
-        </div>
-
-        <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-          <div className="flex gap-2.5 text-base whitespace-nowrap">
-            <div className="flex items-center">
-              <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-              <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-            </div>
-          </div>
-          <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-            UTBK - Kemampuan Penalaran Umum
-          </div>
-          <div className="flex gap-5 justify-between mt-1">
-            <div className="gap-0 my-auto text-neutral-400">
-              25 Soal 25 Menit
-            </div>
-            <Link
-              href={""}
-              className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-            >
-              Gratis
-            </Link>
-          </div>
-        </div>
-
-        <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-          <div className="flex gap-2.5 text-base whitespace-nowrap">
-            <div className="flex items-center">
-              <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-              <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-            </div>
-          </div>
-          <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-            UTBK - Kemampuan Penalaran Umum
-          </div>
-          <div className="flex gap-5 justify-between mt-1">
-            <div className="gap-0 my-auto text-neutral-400">
-              25 Soal 25 Menit
-            </div>
-            <Link
-              href={""}
-              className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-            >
-              Gratis
-            </Link>
-          </div>
-        </div>
+        ))}
       </div>
       {/* Main item finish */}
-
-      <div className="mt-10">
-        <div className="flex items-center">
-          <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-          <h1 className="ml-4 my-2">Soal Terbaru</h1>
-        </div>
-
-        {/* Main item start */}
-        <div className="grid grid-cols-4 flex-wrap gap-4 items-start text-xs font-medium text-black max-md:flex-wrap mt-4">
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-1 px-5 py-3 bg-white rounded-3xl border border-solid border-zinc-500">
-            <div className="flex gap-2.5 text-base whitespace-nowrap">
-              <div className="flex items-center">
-                <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-                <h1 className="ml-2 my-2">Soal Literasi Bahasa Indonesia</h1>
-              </div>
-            </div>
-            <div className="self-start mt-1.5 ml-3 text-neutral-500 max-md:ml-2.5">
-              UTBK - Kemampuan Penalaran Umum
-            </div>
-            <div className="flex gap-5 justify-between mt-1">
-              <div className="gap-0 my-auto text-neutral-400">
-                25 Soal 25 Menit
-              </div>
-              <Link
-                href={""}
-                className="justify-center self-end px-3.5 py-2 mt-2.5 bg-green-400 text-white rounded"
-              >
-                Gratis
-              </Link>
-            </div>
-          </div>
-        </div>
-        {/* Main item finish */}
-      </div>
     </div>
   );
 }

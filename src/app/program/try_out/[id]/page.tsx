@@ -1,16 +1,55 @@
 "use client";
-import React from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import axios from "axios";
+
+interface Tryout {
+  id: string;
+  name: string;
+  start_date: string;
+  end_date: string;
+  total_question: number;
+  total_duration: number;
+  is_corrected: boolean;
+}
 
 export default function TryOut() {
   const router = useRouter();
+  const { id } = useParams();
+  const [tryouts, setTryouts] = useState<Tryout[]>([]);
+
+  useEffect(() => {
+    const fetchProgramDetail = async (token: string) => {
+      try {
+        const response = await axios.get(
+          `https://cors-anywhere.herokuapp.com/http://api.program.taktix.co.id/program/${id}/tryout`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data.data);
+        setTryouts(response.data.data);
+      } catch (error) {
+        console.error("Error fetching program detail:", error);
+      }
+    };
+
+    const token = localStorage.getItem("token");
+    if (token && id) {
+      fetchProgramDetail(token);
+    }
+  }, [id]);
+
+  if (!tryouts.length) return <p>Loading...</p>;
 
   return (
     <div className="mx-40 my-14">
-      <div className="flex items-center ">
+      <div className="flex items-center">
         <button type="button" className="mt-1" onClick={() => router.back()}>
           <FontAwesomeIcon icon={faArrowLeft} className="size-5 opacity-75" />
         </button>
@@ -32,31 +71,30 @@ export default function TryOut() {
         </div>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-x-6 gap-y-6">
-        {[...Array(6)].map((_, index) => (
-          <div key={index} className="w-96 h-52 relative">
+      <div className="flex flex-wrap justify-center gap-x-6 gap-y-6 relative z-10">
+        {tryouts.map((tryout) => (
+          <div key={tryout.id} className="w-96 h-52 relative">
             <div className="w-96 h-52 left-0 top-0 absolute bg-white rounded-2xl border border-stone-300" />
-            <img
+            {/* <img
               className="w-6 h-5 left-[49px] top-[136px] absolute"
               src="/Ok.svg"
-            />
+              alt="Tryout Status"
+            /> */}
             <div className="left-[44px] top-[14px] absolute text-black text-base font-medium">
-              Try Out UTBK 1
+              {tryout.name}
             </div>
             <div className="left-[80px] top-[43px] absolute text-neutral-400 text-base font-normal">
-              Dari 12 Oktober 2023
+              Dari {new Date(tryout.start_date).toLocaleDateString("id-ID")}
             </div>
             <div className="left-[80px] top-[66px] absolute text-neutral-400 text-base font-normal">
-              Sampai 15 Oktober 2023
+              Sampai {new Date(tryout.end_date).toLocaleDateString("id-ID")}
             </div>
             <div className="left-[80px] top-[89px] absolute text-neutral-400 text-base font-normal">
-              Total soal 155, Total durasi 195 menit
+              Total soal {tryout.total_question}, Total durasi{" "}
+              {tryout.total_duration} menit
             </div>
             <div className="left-[81px] top-[112px] absolute text-neutral-400 text-base font-normal">
-              Telah Selesai
-            </div>
-            <div className="left-[82px] top-[135px] absolute text-neutral-400 text-base font-normal">
-              Sudah dinilai
+              {tryout.is_corrected ? "Sudah dinilai" : "Belum dinilai"}
             </div>
             <div className="w-24 h-7 left-[53px] top-[172px] absolute bg-white rounded-2xl border border-stone-300" />
             <div className="left-[76px] top-[174px] absolute text-black text-base font-normal">
