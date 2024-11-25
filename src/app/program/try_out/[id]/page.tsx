@@ -25,7 +25,7 @@ export default function TryOut() {
     const fetchProgramDetail = async (token: string) => {
       try {
         const response = await axios.get(
-          `https://cors-anywhere.herokuapp.com/http://api.program.taktix.co.id/program/${id}/tryout`,
+          `https://web-production-d612.up.railway.app/http://api.program.taktix.co.id/program/${id}/tryout`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

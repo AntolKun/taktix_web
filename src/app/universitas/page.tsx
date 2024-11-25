@@ -20,7 +20,7 @@ export default function Universitas() {
     const fetchUniversities = async (token: string) => {
       try {
         const response = await axios.get(
-          `https://cors-anywhere.herokuapp.com/http://api.program.taktix.co.id/university?page=1&pageSize=1000`,
+          `https://web-production-d612.up.railway.app/http://api.program.taktix.co.id/university?page=1&pageSize=1000`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

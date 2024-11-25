@@ -20,7 +20,6 @@ export default function Program() {
     const fetchPrograms = async (token: string) => {
       try {
         const response = await axios.get(
-          // "https://cors-anywhere.herokuapp.com/http://api.program.taktix.co.id/program/",
           "https://web-production-d612.up.railway.app/http://api.program.taktix.co.id/program/",
           {
             headers: {
