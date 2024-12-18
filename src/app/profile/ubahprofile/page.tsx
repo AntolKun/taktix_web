@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,10 +8,9 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 interface Province {
-  id: string;
+  id: number; // Disesuaikan dengan tipe data ID dari API
   name: string;
 }
-
 
 const UbahProfile = () => {
   const [provinces, setProvinces] = useState<Province[]>([]);
@@ -30,16 +30,21 @@ const UbahProfile = () => {
   useEffect(() => {
     const fetchProvinces = async () => {
       try {
+        const token = localStorage.getItem("token");
         const res = await axios.get(
-          "https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json"
+          "https://api-staging.taktix.co.id/provinces",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
-        setProvinces(res.data);
+        setProvinces(res.data); // Update provinces state
       } catch (error) {
         console.error("Failed to fetch provinces:", error);
       }
     };
 
-    // Fetch user profile data
     const fetchUserProfile = async () => {
       const token = localStorage.getItem("token");
       try {
@@ -51,7 +56,13 @@ const UbahProfile = () => {
             },
           }
         );
-        setFormData(res.data); // Set the formData with user's current data
+        setFormData({
+          ...formData,
+          ...res.data,
+          province_id: res.data.province_id
+            ? res.data.province_id.toString()
+            : "",
+        });
       } catch (error) {
         console.error("Failed to fetch user profile:", error);
       }
@@ -60,6 +71,7 @@ const UbahProfile = () => {
     fetchProvinces();
     fetchUserProfile();
   }, []);
+
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -83,29 +95,27 @@ const UbahProfile = () => {
         }
       );
 
-      // Show success SweetAlert
       Swal.fire({
         title: "Sukses!",
-        text: "Profile berhasil diperbarui.",
+        text: "Profil berhasil diperbarui.",
         icon: "success",
         confirmButtonText: "OK",
       }).then(() => {
-        router.back(); // Go back after successful update
+        router.back();
       });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const errorResponse = error.response.data;
-        let errorMessage = "Terjadi kesalahan saat memperbarui profile.";
+        let errorMessage = "Terjadi kesalahan saat memperbarui profil.";
 
-        // Check if the error is a validation error and errorStacks exist
         if (
           errorResponse.message === "Validation error" &&
           errorResponse.errorStacks
         ) {
           const messages = errorResponse.errorStacks
-            .map((err: any) => err.msg) // Extract 'msg' from each errorStack
+            .map((err: any) => err.msg)
             .join(", ");
-          errorMessage = messages; // Combine messages from errorStacks
+          errorMessage = messages;
         }
 
         Swal.fire({
@@ -118,7 +128,7 @@ const UbahProfile = () => {
         console.error("Failed to update profile:", error);
         Swal.fire({
           title: "Gagal!",
-          text: "Terjadi kesalahan saat memperbarui profile.",
+          text: "Terjadi kesalahan saat memperbarui profil.",
           icon: "error",
           confirmButtonText: "OK",
         });
@@ -128,90 +138,45 @@ const UbahProfile = () => {
 
   return (
     <div className="mx-40 my-14">
-      <div className="flex items-center ">
+      <div className="flex items-center">
         <button type="button" className="mt-1" onClick={() => router.back()}>
           <FontAwesomeIcon icon={faArrowLeft} className="size-5 opacity-75" />
         </button>
-        <h1 className="ml-4 my-2">Ubah Profile</h1>
+        <h1 className="ml-4 my-2">Ubah Profil</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="mx-auto max-w-[500px]">
-        <div className="my-6">
-          <label
-            htmlFor="name"
-            className="block text-xs font-medium text-gray-700"
-          >
-            Nama
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="mt-1 w-full rounded-md border shadow-sm sm:text-sm"
-            required
-          />
-        </div>
-
-        <div className="my-6">
-          <label
-            htmlFor="username"
-            className="block text-xs font-medium text-gray-700"
-          >
-            Username
-          </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            className="mt-1 w-full rounded-md border shadow-sm sm:text-sm"
-            required
-          />
-        </div>
-
-        <div className="my-6">
-          <label
-            htmlFor="email"
-            className="block text-xs font-medium text-gray-700"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="mt-1 w-full rounded-md border shadow-sm sm:text-sm"
-            required
-          />
-        </div>
-
-        <div className="my-6">
-          <label
-            htmlFor="phone_number"
-            className="block text-xs font-medium text-gray-700"
-          >
-            Nomor HP
-          </label>
-          <input
-            type="tel"
-            id="phone_number"
-            name="phone_number"
-            value={formData.phone_number}
-            onChange={handleChange}
-            className="mt-1 w-full rounded-md border shadow-sm sm:text-sm"
-            required
-          />
-        </div>
+        {[
+          { id: "name", label: "Nama", type: "text" },
+          { id: "username", label: "Username", type: "text" },
+          { id: "email", label: "Email", type: "email" },
+          { id: "phone_number", label: "Nomor HP", type: "tel" },
+          { id: "photo_profile", label: "URL Foto Profil", type: "text" },
+          { id: "school", label: "Sekolah", type: "text" },
+        ].map((field) => (
+          <div key={field.id} className="my-6">
+            <label
+              htmlFor={field.id}
+              className="block text-xs font-medium text-gray-700"
+            >
+              {field.label}
+            </label>
+            <input
+              type={field.type}
+              id={field.id}
+              name={field.id}
+              value={(formData as any)[field.id]}
+              onChange={handleChange}
+              className="mt-1 w-full rounded-md border shadow-sm sm:text-sm"
+              required
+            />
+          </div>
+        ))}
 
         <div className="my-6">
           <label
             htmlFor="gender"
-            className="block mb-2 text-sm font-medium text-gray-900"
+            className="block text-xs font-medium text-gray-700"
           >
             Jenis Kelamin
           </label>
@@ -229,47 +194,13 @@ const UbahProfile = () => {
 
         <div className="my-6">
           <label
-            htmlFor="photo_profile"
+            htmlFor="province_id"
             className="block text-xs font-medium text-gray-700"
-          >
-            URL Foto Profil
-          </label>
-          <input
-            type="text"
-            id="photo_profile"
-            name="photo_profile"
-            value={formData.photo_profile}
-            onChange={handleChange}
-            className="mt-1 w-full rounded-md border shadow-sm sm:text-sm"
-          />
-        </div>
-
-        <div className="my-6">
-          <label
-            htmlFor="school"
-            className="block text-xs font-medium text-gray-700"
-          >
-            Sekolah
-          </label>
-          <input
-            type="text"
-            id="school"
-            name="school"
-            value={formData.school}
-            onChange={handleChange}
-            className="mt-1 w-full rounded-md border shadow-sm sm:text-sm"
-          />
-        </div>
-
-        <div className="my-6">
-          <label
-            htmlFor="provinsi"
-            className="block mb-2 text-sm font-medium text-gray-900"
           >
             Provinsi
           </label>
           <select
-            id="provinsi"
+            id="province_id"
             name="province_id"
             value={formData.province_id}
             onChange={handleChange}
