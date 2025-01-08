@@ -134,6 +134,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import Swal from "sweetalert2"; // Import SweetAlert2
 
 export default function KerjakanSoal({ params }: { params: { id: string } }) {
   const [name, setName] = useState("");
@@ -146,7 +147,7 @@ export default function KerjakanSoal({ params }: { params: { id: string } }) {
     total_question: 0,
   });
   const [categoryName, setCategoryName] = useState({
-    name: ""
+    name: "",
   });
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: number]: string;
@@ -177,8 +178,7 @@ export default function KerjakanSoal({ params }: { params: { id: string } }) {
           setDataSoal(response.data);
           setCategoryName(response.data.category);
           setQuestions(response.data.questions);
-        }
-      )
+        })
         .catch((error) => {
           console.error("Error fetching soal data:", error);
         });
@@ -210,8 +210,18 @@ export default function KerjakanSoal({ params }: { params: { id: string } }) {
             soal_id: id,
             answers,
           })
-          .then((response) => {
-            alert(`Your score: ${response.data.score}`);
+          .then(() => {
+            // Show confirmation SweetAlert before navigation
+            Swal.fire({
+              title: "Jawaban Sudah Dikirim",
+              text: "Terima kasih telah mengerjakan soal.",
+              icon: "success",
+              confirmButtonText: "OK",
+              confirmButtonColor: "#28a745", // Green color for OK button
+            }).then(() => {
+              // After confirming, redirect to detail soal page
+              router.push(`/soal/detail_soal/${id}`);
+            });
           })
           .catch((error) => {
             console.error("Error submitting answers:", error);
@@ -237,6 +247,24 @@ export default function KerjakanSoal({ params }: { params: { id: string } }) {
   };
 
   const currentQuestion = questions[currentQuestionIndex];
+
+  // Function to show SweetAlert confirmation
+  const showConfirmation = () => {
+    Swal.fire({
+      title: "Apakah Anda yakin?",
+      text: "Jawaban yang Anda kirimkan tidak dapat diubah!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ya, Kirim Jawaban",
+      cancelButtonText: "Batal",
+      confirmButtonColor: "#28a745", // Green color for confirm button
+      cancelButtonColor: "#dc3545", // Red color for cancel button
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleSubmitAnswers();
+      }
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8">
@@ -330,7 +358,7 @@ export default function KerjakanSoal({ params }: { params: { id: string } }) {
       {/* Submit Button */}
       {currentQuestionIndex === questions.length - 1 && (
         <button
-          onClick={handleSubmitAnswers}
+          onClick={showConfirmation} // Show SweetAlert confirmation
           className="mt-6 px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition"
         >
           Submit Answers
@@ -339,3 +367,6 @@ export default function KerjakanSoal({ params }: { params: { id: string } }) {
     </div>
   );
 }
+
+
+

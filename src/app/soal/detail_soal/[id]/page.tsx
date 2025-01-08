@@ -1,14 +1,14 @@
-// SoalDetail.tsx
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // To navigate dynamically
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import Swal from "sweetalert2"; // Import SweetAlert
 
 export default function SoalDetail({ params }: { params: { id: string } }) {
   const [name, setName] = useState("");
   const [photoProfile, setPhotoProfile] = useState("");
-  const [exam, setExam] = useState<any>(null);
+  const [exam, setExam] = useState<any>(null); // State for storing exam data
   const { id } = params; // Extracting soalId from the URL
   const router = useRouter(); // Hook for navigating
 
@@ -21,6 +21,7 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
         const user = decoded.user;
         setName(user.name);
         setPhotoProfile(user.photo_profile);
+        console.log(token)
 
         fetchExamDetail(token);
       } catch (error) {
@@ -52,6 +53,52 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
       setExam(data);
     } catch (error) {
       console.error("Error fetching exam:", error);
+    }
+  };
+
+  // Fungsi untuk cek history
+  const handleCheckHistory = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      Swal.fire({
+        icon: "error",
+        title: "Token not found",
+        text: "Please login to check history.",
+      });
+      return;
+    }
+
+    try {
+      // API request untuk cek history berdasarkan soal id
+      const response = await axios.get(
+        `http://localhost:3500/api/history/${id}`, // URL API untuk cek history
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Menampilkan notifikasi bahwa history ditemukan
+      if (response.data) {
+        Swal.fire({
+          icon: "success",
+          title: "History found",
+          text: "Your exam history is available.",
+        });
+
+        // Navigate to the next page (e.g., Kerjakan Soal)
+        router.push(`/soal/riwayat/${id}`);
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching history:", error);
+      Swal.fire({
+        icon: "error",
+        title: "History not found",
+        text: "No history available for this exam.",
+      });
     }
   };
 
@@ -93,6 +140,13 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
               onClick={handleStartExam}
             >
               Kerjakan Soal
+            </button>
+            {/* Button to Check History */}
+            <button
+              className="w-[240px] h-[52px] bg-red-700 text-white text-xl font-semibold rounded-[20px]"
+              onClick={handleCheckHistory}
+            >
+              Cek History
             </button>
           </div>
         </div>
