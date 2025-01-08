@@ -1,13 +1,16 @@
-"use client";
+// SoalDetail.tsx
+"use client"
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation"; // To navigate dynamically
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 export default function SoalDetail({ params }: { params: { id: string } }) {
   const [name, setName] = useState("");
   const [photoProfile, setPhotoProfile] = useState("");
   const [exam, setExam] = useState<any>(null);
-  const { id } = params; // Ambil ID dari params
+  const { id } = params; // Extracting soalId from the URL
+  const router = useRouter(); // Hook for navigating
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -31,7 +34,7 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
   const fetchExamDetail = async (token: string) => {
     try {
       const response = await fetch(
-        `https://api.taktix.co.id/student/exam/${id}`,
+        `http://localhost:3500/api/soal/${id}`, // Correct URL with dynamic ID
         {
           method: "GET",
           headers: {
@@ -46,29 +49,24 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
       }
 
       const data = await response.json();
-
-      // Mengatur state exam dengan data yang diterima
       setExam(data);
     } catch (error) {
       console.error("Error fetching exam:", error);
     }
   };
 
-  // Cek apakah exam sudah di-set
+  // Navigate to the Kerjakan Soal page with the correct soalId
+  const handleStartExam = () => {
+    router.push(`/soal/kerjakan_soal/${id}`); // Redirect to Kerjakan Soal page
+  };
+
   if (!exam) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="mx-40 my-14">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center">
-          <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-          <h1 className="ml-4 my-2">Detail Ujian</h1>
-        </div>
-      </div>
-
-      {/* Main item start */}
+      {/* Details Section */}
       <div className="flex flex-col items-center my-8">
         <div className="w-full max-w-[1000px] bg-blue-700 rounded-[20px] p-8">
           {/* Title Section */}
@@ -78,57 +76,27 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
 
           {/* Details Section */}
           <div className="grid grid-cols-3 gap-4 text-white">
+            {/* Display exam details like category, total questions, etc. */}
             <div className="flex flex-col">
               <span className="text-[18px] font-normal">Kategori</span>
               <span className="text-[18px] font-semibold">
-                {exam.category?.name || "N/A"}{" "}
+                {exam.category?.name || "N/A"}
               </span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-[18px] font-normal">Kategori Ujian</span>
-              <span className="text-[18px] font-semibold">
-                {exam.exam_category?.name || "N/A"}{" "}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[18px] font-normal">Harga</span>
-              <span className="text-[18px] font-semibold">
-                {exam.is_free ? "Gratis" : "Berbayar"}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[18px] font-normal">Jumlah Soal</span>
-              <span className="text-[18px] font-semibold">
-                {exam.total_question} Soal
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[18px] font-normal">Durasi</span>
-              <span className="text-[18px] font-semibold">
-                {exam.duration} Menit
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[18px] font-normal">Publikasi</span>
-              <span className="text-[18px] font-semibold">
-                {exam.is_public ? "Publik" : "Privat"}
-              </span>
-            </div>
+            {/* Other exam details */}
           </div>
 
           {/* Button Section */}
           <div className="flex justify-center mt-10 space-x-6">
-            <button className="w-[240px] h-[52px] bg-white text-blue-700 text-xl font-semibold rounded-[20px]">
-              Riwayat Pengerjaan
-            </button>
-            <button className="w-[240px] h-[52px] bg-white text-blue-700 text-xl font-semibold rounded-[20px]">
+            <button
+              className="w-[240px] h-[52px] bg-white text-blue-700 text-xl font-semibold rounded-[20px]"
+              onClick={handleStartExam}
+            >
               Kerjakan Soal
             </button>
           </div>
         </div>
       </div>
-
-      {/* Main item finish */}
     </div>
   );
 }

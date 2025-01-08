@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import UniversitiesChart from "./UniversitiesCharts";
 
 interface University {
   id: number;
@@ -76,6 +77,10 @@ export default function Universitas() {
         </div>
       </form>
 
+      <div>
+        <UniversitiesChart />
+      </div>
+
       <div className="overflow-x-auto rounded-lg border max-w-[682px] mx-auto mt-4">
         <table className="min-w-full divide-y divide-black bg-white text-sm">
           <tbody className="divide-y divide-black">
@@ -83,7 +88,9 @@ export default function Universitas() {
               filteredUniversities.map((university) => (
                 <tr key={university.id}>
                   <td className="whitespace-nowrap px-4 py-4 font-medium">
-                    <Link href={`/universitas/detail_universitas/${university.id}`}>
+                    <Link
+                      href={`/universitas/detail_universitas/${university.id}`}
+                    >
                       {university.name}
                     </Link>
                   </td>
