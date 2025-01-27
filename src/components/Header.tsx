@@ -32,12 +32,10 @@ const Header = () => {
       const decoded: any = jwtDecode(token);
       const user = decoded.user;
       setName(user.name);
-      setPhotoProfile(user.photo_profile);
       setEmail(user.email);
     } catch (error) {
       console.error("Invalid token:", error);
       setName(""); // Clear name and photoProfile in case of token error
-      setPhotoProfile("");
       setEmail("");
       Swal.fire({
         icon: "error",

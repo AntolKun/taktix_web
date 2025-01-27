@@ -3,43 +3,81 @@
 // import { useRouter } from "next/navigation";
 // import {jwtDecode} from "jwt-decode";
 // import axios from "axios";
+// import Swal from "sweetalert2";
 
 // export default function KerjakanSoal({ params }: { params: { id: string } }) {
-//   const [name, setName] = useState("");
-//   const [photoProfile, setPhotoProfile] = useState("");
 //   const [questions, setQuestions] = useState<any[]>([]);
+//   const [dataSoal, setDataSoal] = useState({
+//     title: "",
+//     category_id: "",
+//     duration: 0, // Duration in minutes
+//     total_question: 0,
+//   });
 //   const [selectedOptions, setSelectedOptions] = useState<{
 //     [key: number]: string;
 //   }>({});
+//   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+//   const [timeRemaining, setTimeRemaining] = useState<number | null>(null); // Timer state in seconds
+//   const [isTimeOver, setIsTimeOver] = useState(false); // To track when time is over
 //   const router = useRouter();
 //   const { id } = params;
 
+//   // Fetch soal data and initialize timer
 //   useEffect(() => {
 //     const token = localStorage.getItem("token");
-//     if (token) {
-//       try {
-//         const decoded: any = jwtDecode(token);
-//         const user = decoded.user;
-//         setName(user.name);
-//         setPhotoProfile(user.photo_profile);
-//       } catch (error) {
-//         console.error("Invalid token:", error);
-//         setName("");
-//         setPhotoProfile("");
-//       }
-//     }
-
 //     if (id) {
 //       axios
-//         .get(`http://localhost:3500/api/soali/${id}`)
+//         .get(`http://localhost:3500/api/soali/${id}`, {
+//           headers: { Authorization: `Bearer ${token}` },
+//         })
 //         .then((response) => {
-//           setQuestions(response.data.questions);
+//           const soalData = response.data;
+//           setDataSoal(soalData);
+//           setQuestions(soalData.questions);
+
+//           // Initialize timer in seconds
+//           const durationInSeconds = soalData.duration * 60;
+//           setTimeRemaining(durationInSeconds);
 //         })
 //         .catch((error) => {
 //           console.error("Error fetching soal data:", error);
 //         });
 //     }
 //   }, [id]);
+
+//   // Timer countdown effect
+//   useEffect(() => {
+//     if (timeRemaining !== null && timeRemaining > 0) {
+//       const timer = setInterval(() => {
+//         setTimeRemaining((prev) => (prev !== null ? prev - 1 : 0));
+//       }, 1000);
+
+//       return () => clearInterval(timer);
+//     } else if (timeRemaining === 0 && !isTimeOver) {
+//       setIsTimeOver(true); // Trigger automatic submission only once
+//     }
+//   }, [timeRemaining, isTimeOver]);
+
+//   // Handle automatic submission when time is over
+//   useEffect(() => {
+//     if (isTimeOver) {
+//       Swal.fire({
+//         title: "Waktu Habis",
+//         text: "Jawaban Anda akan dikirim secara otomatis.",
+//         icon: "warning",
+//         confirmButtonText: "OK",
+//       }).then(() => handleSubmitAnswers());
+//     }
+//   }, [isTimeOver]);
+
+//   // Format time for display (MM:SS)
+//   const formatTime = (seconds: number) => {
+//     const minutes = Math.floor(seconds / 60);
+//     const remainingSeconds = seconds % 60;
+//     return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
+//       .toString()
+//       .padStart(2, "0")}`;
+//   };
 
 //   const handleAnswerChange = (questionId: number, selectedOption: string) => {
 //     setSelectedOptions((prevSelectedOptions) => ({
@@ -66,8 +104,15 @@
 //             soal_id: id,
 //             answers,
 //           })
-//           .then((response) => {
-//             alert(`Your score: ${response.data.score}`);
+//           .then(() => {
+//             Swal.fire({
+//               title: "Jawaban Sudah Dikirim",
+//               text: "Terima kasih telah mengerjakan soal.",
+//               icon: "success",
+//               confirmButtonText: "OK",
+//             }).then(() => {
+//               router.push(`/soal/detail_soal/${id}`);
+//             });
 //           })
 //           .catch((error) => {
 //             console.error("Error submitting answers:", error);
@@ -78,53 +123,74 @@
 //     }
 //   };
 
+//   const currentQuestion = questions[currentQuestionIndex];
+
 //   return (
 //     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8">
-//       {/* Header */}
-//       <div className="flex items-center space-x-4 mb-8">
-//         <img
-//           src={photoProfile || "/default-profile.png"}
-//           alt="Profile"
-//           className="w-16 h-16 rounded-full"
-//         />
-//         <h1 className="text-2xl font-semibold text-gray-800">{name}</h1>
+//       <div className="flex flex-col items-center my-8">
+//         <h1 className="text-2xl font-bold">{dataSoal.title}</h1>
+//         <p>Total Soal: {dataSoal.total_question}</p>
+//         <div className="text-red-500 font-bold text-xl">
+//           Waktu Tersisa:{" "}
+//           {timeRemaining !== null ? formatTime(timeRemaining) : "Loading..."}
+//         </div>
 //       </div>
 
-//       {/* Questions */}
-//       <div className="w-full max-w-3xl bg-white shadow-md rounded-lg p-6">
-//         <h2 className="text-xl font-bold text-gray-800 mb-4">Soal</h2>
-//         {questions.map((question) => (
-//           <div key={question.id} className="mb-6">
-//             <p className="text-lg font-medium text-gray-700 mb-3">
-//               {question.question}
-//             </p>
-//             <div className="grid grid-cols-2 gap-4">
-//               {question.options.map((option: any) => (
-//                 <button
-//                   key={option.id}
-//                   className={`border rounded-lg p-4 text-left transition ${
-//                     selectedOptions[question.id] === option.label
-//                       ? "border-blue-500 bg-blue-100"
-//                       : "border-gray-300 bg-white"
-//                   }`}
-//                   onClick={() => handleAnswerChange(question.id, option.label)}
-//                 >
-//                   <span className="font-bold">{option.label}.</span>{" "}
-//                   {option.content}
-//                 </button>
-//               ))}
-//             </div>
+//       {currentQuestion && (
+//         <div className="w-full max-w-3xl bg-white shadow-md rounded-lg p-6">
+//           <h2 className="text-xl font-bold">Soal {currentQuestionIndex + 1}</h2>
+//           <p className="text-lg">{currentQuestion.question}</p>
+//           <div className="grid grid-cols-2 gap-4">
+//             {currentQuestion.options.map((option: any) => (
+//               <button
+//                 key={option.id}
+//                 className={`border rounded-lg p-4 ${
+//                   selectedOptions[currentQuestion.id] === option.label
+//                     ? "bg-blue-200"
+//                     : ""
+//                 }`}
+//                 onClick={() =>
+//                   handleAnswerChange(currentQuestion.id, option.label)
+//                 }
+//               >
+//                 {option.label}. {option.content}
+//               </button>
+//             ))}
 //           </div>
-//         ))}
+//         </div>
+//       )}
+
+//       <div className="flex mt-4">
+//         <button
+//           className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+//           disabled={currentQuestionIndex === 0}
+//           onClick={() =>
+//             setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))
+//           }
+//         >
+//           Previous
+//         </button>
+//         <button
+//           className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+//           disabled={currentQuestionIndex === questions.length - 1}
+//           onClick={() =>
+//             setCurrentQuestionIndex((prev) =>
+//               Math.min(prev + 1, questions.length - 1)
+//             )
+//           }
+//         >
+//           Next
+//         </button>
 //       </div>
 
-//       {/* Submit Button */}
-//       <button
-//         onClick={handleSubmitAnswers}
-//         className="mt-6 px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition"
-//       >
-//         Submit Answers
-//       </button>
+//       {currentQuestionIndex === questions.length - 1 && (
+//         <button
+//           className="mt-6 px-6 py-3 bg-green-500 text-white rounded-lg"
+//           onClick={handleSubmitAnswers}
+//         >
+//           Submit Answers
+//         </button>
+//       )}
 //     </div>
 //   );
 // }
@@ -134,56 +200,68 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import Swal from "sweetalert2"; // Import SweetAlert2
+import Swal from "sweetalert2";
 
 export default function KerjakanSoal({ params }: { params: { id: string } }) {
-  const [name, setName] = useState("");
-  const [photoProfile, setPhotoProfile] = useState("");
   const [questions, setQuestions] = useState<any[]>([]);
   const [dataSoal, setDataSoal] = useState({
     title: "",
     category_id: "",
-    duration: 0,
+    duration: 0, // Duration in minutes
     total_question: 0,
-  });
-  const [categoryName, setCategoryName] = useState({
-    name: "",
   });
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: number]: string;
   }>({});
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // New state for current question
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const router = useRouter();
   const { id } = params;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decoded: any = jwtDecode(token);
-        const user = decoded.user;
-        setName(user.name);
-        setPhotoProfile(user.photo_profile);
-      } catch (error) {
-        console.error("Invalid token:", error);
-        setName("");
-        setPhotoProfile("");
-      }
-    }
-
     if (id) {
       axios
-        .get(`http://localhost:3500/api/soali/${id}`)
+        .get(`http://localhost:3500/api/soali/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then((response) => {
-          setDataSoal(response.data);
-          setCategoryName(response.data.category);
-          setQuestions(response.data.questions);
+          const soalData = response.data;
+          setDataSoal(soalData);
+          setQuestions(soalData.questions);
+
+          const durationInSeconds = soalData.duration * 60;
+          setTimeRemaining(durationInSeconds);
         })
         .catch((error) => {
           console.error("Error fetching soal data:", error);
         });
     }
   }, [id]);
+
+  useEffect(() => {
+    if (timeRemaining !== null && timeRemaining > 0) {
+      const timer = setInterval(() => {
+        setTimeRemaining((prev) => (prev !== null ? prev - 1 : 0));
+      }, 1000);
+      return () => clearInterval(timer);
+    } else if (timeRemaining === 0) {
+      Swal.fire({
+        title: "Waktu Habis",
+        text: "Jawaban Anda akan dikirim secara otomatis.",
+        icon: "warning",
+        confirmButtonText: "OK",
+      }).then(() => handleSubmitAnswers());
+    }
+  }, [timeRemaining]);
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
+      .toString()
+      .padStart(2, "0")}`;
+  };
 
   const handleAnswerChange = (questionId: number, selectedOption: string) => {
     setSelectedOptions((prevSelectedOptions) => ({
@@ -211,15 +289,12 @@ export default function KerjakanSoal({ params }: { params: { id: string } }) {
             answers,
           })
           .then(() => {
-            // Show confirmation SweetAlert before navigation
             Swal.fire({
               title: "Jawaban Sudah Dikirim",
               text: "Terima kasih telah mengerjakan soal.",
               icon: "success",
               confirmButtonText: "OK",
-              confirmButtonColor: "#28a745", // Green color for OK button
             }).then(() => {
-              // After confirming, redirect to detail soal page
               router.push(`/soal/detail_soal/${id}`);
             });
           })
@@ -232,60 +307,28 @@ export default function KerjakanSoal({ params }: { params: { id: string } }) {
     }
   };
 
-  const nextQuestion = () => {
-    setCurrentQuestionIndex((prevIndex) =>
-      Math.min(prevIndex + 1, questions.length - 1)
-    );
-  };
-
-  const previousQuestion = () => {
-    setCurrentQuestionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
-  };
-
-  const goToQuestion = (index: number) => {
-    setCurrentQuestionIndex(index);
-  };
-
   const currentQuestion = questions[currentQuestionIndex];
-
-  // Function to show SweetAlert confirmation
-  const showConfirmation = () => {
-    Swal.fire({
-      title: "Apakah Anda yakin?",
-      text: "Jawaban yang Anda kirimkan tidak dapat diubah!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Ya, Kirim Jawaban",
-      cancelButtonText: "Batal",
-      confirmButtonColor: "#28a745", // Green color for confirm button
-      cancelButtonColor: "#dc3545", // Red color for cancel button
-    }).then((result) => {
-      if (result.isConfirmed) {
-        handleSubmitAnswers();
-      }
-    });
-  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8">
       {/* Header */}
       <div className="flex flex-col items-center my-8">
         <div className="w-full max-w-[1000px] rounded-[20px] p-8">
-          {/* Title Section */}
           <div className="w-[872px] h-[75px] relative">
-            <div className="w-[872px] h-[75px] left-0 top-0 absolute bg-indigo-300 rounded-[20px]" />
-            <div className="w-[558px] h-[75px] left-0 top-0 absolute bg-blue-700 rounded-[20px]" />
-            <div className="left-[28px] top-[11px] absolute text-white text-xl font-semibold">
-              {dataSoal.title} {/* Title */}
+            <div className="w-[872px] h-[75px] absolute bg-indigo-300 rounded-[20px]" />
+            <div className="w-[558px] h-[75px] absolute bg-blue-700 rounded-[20px]" />
+            <div className="absolute left-[28px] top-[11px] text-white text-xl font-semibold">
+              {dataSoal.title}
             </div>
-            <div className="left-[568px] top-[24px] absolute text-white text-xl font-semibold">
-              {dataSoal.total_question} Soal {/* Total Question */}
+            <div className="absolute left-[568px] top-[24px] text-black text-xl font-semibold">
+              {dataSoal.total_question} Soal
             </div>
-            <div className="left-[28px] top-[42px] absolute text-white text-base font-normal">
-              Kategori: {categoryName.name} {/* Category ID */}
+            <div className="absolute left-[28px] top-[42px] text-white text-base font-normal">
+              Kategori: {dataSoal.category_id}
             </div>
-            <div className="left-[766px] top-[23px] absolute text-white text-xl font-semibold">
-              {dataSoal.duration} {/* Duration */}
+            {/* Timer */}
+            <div className="absolute left-[766px] top-[23px] text-black text-xl font-semibold">
+              {timeRemaining !== null ? formatTime(timeRemaining) : "00:00"}
             </div>
           </div>
         </div>
@@ -321,21 +364,21 @@ export default function KerjakanSoal({ params }: { params: { id: string } }) {
         </div>
       )}
 
-      {/* Navigation and Question Numbers */}
+      {/* Navigation */}
       <div className="flex justify-between items-center w-full max-w-3xl mt-6">
         <button
-          onClick={previousQuestion}
+          onClick={() =>
+            setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))
+          }
           className="px-6 py-3 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 transition"
         >
           Previous
         </button>
-
-        {/* Display question numbers */}
         <div className="flex space-x-2">
           {questions.map((_, index) => (
             <button
               key={index}
-              onClick={() => goToQuestion(index)}
+              onClick={() => setCurrentQuestionIndex(index)}
               className={`px-4 py-2 border rounded-lg ${
                 currentQuestionIndex === index
                   ? "bg-blue-500 text-white"
@@ -346,9 +389,12 @@ export default function KerjakanSoal({ params }: { params: { id: string } }) {
             </button>
           ))}
         </div>
-
         <button
-          onClick={nextQuestion}
+          onClick={() =>
+            setCurrentQuestionIndex((prev) =>
+              Math.min(prev + 1, questions.length - 1)
+            )
+          }
           className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition"
         >
           Next
@@ -358,7 +404,7 @@ export default function KerjakanSoal({ params }: { params: { id: string } }) {
       {/* Submit Button */}
       {currentQuestionIndex === questions.length - 1 && (
         <button
-          onClick={showConfirmation} // Show SweetAlert confirmation
+          onClick={handleSubmitAnswers}
           className="mt-6 px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition"
         >
           Submit Answers
@@ -367,6 +413,3 @@ export default function KerjakanSoal({ params }: { params: { id: string } }) {
     </div>
   );
 }
-
-
-

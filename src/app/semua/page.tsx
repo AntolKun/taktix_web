@@ -109,11 +109,15 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
 
 export default function SemuaSoal() {
   const [name, setName] = useState("");
   const [photoProfile, setPhotoProfile] = useState("");
   const [exams, setExams] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -152,7 +156,14 @@ export default function SemuaSoal() {
 
   return (
     <div className="mx-40 my-14">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center">
+        <button type="button" className="mt-1" onClick={() => router.back()}>
+          <FontAwesomeIcon icon={faArrowLeft} className="size-5 opacity-75" />
+        </button>
+        <h1 className="ml-4 my-2">Seluruh Soal</h1>
+      </div>
+
+      <div className="flex items-center justify-between mt-4">
         <div className="flex items-center">
           <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
           <h1 className="ml-4 my-2">Seluruh Latihan Ujian</h1>

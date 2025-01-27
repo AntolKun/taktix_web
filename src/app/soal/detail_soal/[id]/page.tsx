@@ -19,6 +19,7 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
       try {
         const decoded: any = jwtDecode(token);
         const user = decoded.user;
+        console.log(user.id);
         setName(user.name);
         setPhotoProfile(user.photo_profile);
         console.log(token)
@@ -31,6 +32,10 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
       }
     }
   }, [id]);
+
+  const handleBeriRating = () => {
+    router.push(`/soal/rating/${id}`);
+  };
 
   const fetchExamDetail = async (token: string) => {
     try {
@@ -72,7 +77,7 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
     try {
       // API request untuk cek history berdasarkan soal id
       const response = await axios.get(
-        `http://localhost:3500/api/history/${id}`, // URL API untuk cek history
+        `http://localhost:3500/api/historya/${id}`, // URL API untuk cek history
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -141,12 +146,24 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
             >
               Kerjakan Soal
             </button>
+            <button
+              className="w-[240px] h-[52px] bg-green-700 text-white text-xl font-semibold rounded-[20px]"
+              onClick={() => router.push(`/soal/kunci_jawaban/${id}`)}
+            >
+              Lihat Kunci Jawaban
+            </button>
             {/* Button to Check History */}
             <button
               className="w-[240px] h-[52px] bg-red-700 text-white text-xl font-semibold rounded-[20px]"
               onClick={handleCheckHistory}
             >
               Cek History
+            </button>
+            <button
+              onClick={handleBeriRating}
+              className="w-[240px] h-[52px] bg-yellow-400 text-white text-xl font-semibold rounded-[20px]"
+            >
+              Beri Rating
             </button>
           </div>
         </div>
