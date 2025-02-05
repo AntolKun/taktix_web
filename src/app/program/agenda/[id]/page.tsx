@@ -24,7 +24,8 @@ export default function Agenda() {
     const fetchAgendaDetail = async (token: string) => {
       try {
         const response = await axios.get(
-          `https://web-production-d612.up.railway.app/http://api.program.taktix.co.id/program/${id}/agenda`,
+          // `https://web-production-d612.up.railway.app/http://api.program.taktix.co.id/program/${id}/agenda`,
+          `http://localhost:3500/programs/${id}/agenda`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

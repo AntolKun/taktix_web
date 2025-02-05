@@ -1,16 +1,16 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // To navigate dynamically
+import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import Swal from "sweetalert2"; // Import SweetAlert
+import Swal from "sweetalert2";
 
-export default function SoalDetail({ params }: { params: { id: string } }) {
+export default function ProgramSoalDetail({ params }: { params: { id: string } }) {
   const [name, setName] = useState("");
   const [photoProfile, setPhotoProfile] = useState("");
-  const [exam, setExam] = useState<any>(null); // State for storing exam data
-  const { id } = params; // Extracting soalId from the URL
-  const router = useRouter(); // Hook for navigating
+  const [exam, setExam] = useState<any>(null);
+  const { id } = params; // Ambil ID dari params
+  const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -22,7 +22,7 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
         console.log(user.id);
         setName(user.name);
         setPhotoProfile(user.photo_profile);
-        console.log(token)
+        console.log(token);
 
         fetchExamDetail(token);
       } catch (error) {
@@ -39,10 +39,9 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
 
   const fetchExamDetail = async (token: string) => {
     try {
-      const response = await fetch(
-        `http://localhost:3500/api/soal/${id}`, // Correct URL with dynamic ID
+      const response = await axios.get(
+        `http://localhost:3500/programs/tryout/detail/${id}`,
         {
-          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -50,12 +49,8 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch exam details");
-      }
-
-      const data = await response.json();
-      setExam(data);
+      console.log(response.data);
+      setExam(response.data);
     } catch (error) {
       console.error("Error fetching exam:", error);
     }
@@ -77,7 +72,7 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
     try {
       // API request untuk cek history berdasarkan soal id
       const response = await axios.get(
-        `http://localhost:3500/api/historya/${id}`, // URL API untuk cek history
+        `http://localhost:3500/programs/historya/${id}`, // URL API untuk cek history
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -94,7 +89,7 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
         });
 
         // Navigate to the next page (e.g., Kerjakan Soal)
-        router.push(`/soal/riwayat/${id}`);
+        router.push(`/program/riwayat/${id}`);
         console.log(response.data);
       }
     } catch (error) {
@@ -109,19 +104,20 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
 
   // Navigate to the Kerjakan Soal page with the correct soalId
   const handleStartExam = () => {
-    router.push(`/soal/kerjakan_soal/${id}`); // Redirect to Kerjakan Soal page
+    router.push(`/program/kerjakan_tryout/${id}`); // Redirect to Kerjakan Soal page
   };
 
   if (!exam) {
-    return <div>Loading...</div>;
+    return <p>Loading...</p>;
   }
+
 
   return (
     <div className="mx-40 my-14">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <div className="h-6 w-2 rounded-lg bg-yellow-300"></div>
-          <h1 className="ml-4 my-2">Detail Soal</h1>
+          <h1 className="ml-4 my-2">Detail Tryout</h1>
         </div>
       </div>
 
@@ -137,9 +133,16 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
           <div className="grid grid-cols-3 gap-4 text-white">
             {/* Display exam details like category, total questions, etc. */}
             <div className="flex flex-col">
-              <span className="text-[18px] font-normal">Kategori</span>
+              <span className="text-[18px] font-normal">Durasi</span>
               <span className="text-[18px] font-semibold">
-                {exam.category?.name || "N/A"}
+                {exam.duration || "N/A"} Menit
+              </span>
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-[18px] font-normal">Total Soal</span>
+              <span className="text-[18px] font-semibold">
+                {exam.total_question || "N/A"} Soal
               </span>
             </div>
             {/* Other exam details */}
@@ -155,7 +158,7 @@ export default function SoalDetail({ params }: { params: { id: string } }) {
             </button>
             <button
               className="w-[240px] h-[52px] bg-green-700 text-white text-xl font-semibold rounded-[20px]"
-              onClick={() => router.push(`/soal/kunci_jawaban/${id}`)}
+              onClick={() => router.push(`/program/kunci_jawaban/${id}`)}
             >
               Lihat Kunci Jawaban
             </button>

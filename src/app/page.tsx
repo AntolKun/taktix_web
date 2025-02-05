@@ -11,6 +11,7 @@ export default function Home() {
     const token = localStorage.getItem("token");
     if (token) {
       try {
+        console.log(token);
         const decoded: any = jwtDecode(token);
         const user = decoded.user;
         setName(user.name);

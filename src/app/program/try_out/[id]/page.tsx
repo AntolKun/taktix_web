@@ -8,24 +8,27 @@ import axios from "axios";
 
 interface Tryout {
   id: string;
+  title: string;
   name: string;
-  start_date: string;
+  created_at: string;
   end_date: string;
   total_question: number;
-  total_duration: number;
+  duration: number;
   is_corrected: boolean;
 }
 
-export default function TryOut() {
+export default function TryOut({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { id } = useParams();
   const [tryouts, setTryouts] = useState<Tryout[]>([]);
+  // const { id } = params;
 
   useEffect(() => {
     const fetchProgramDetail = async (token: string) => {
       try {
         const response = await axios.get(
-          `https://web-production-d612.up.railway.app/http://api.program.taktix.co.id/program/${id}/tryout`,
+          // `https://web-production-d612.up.railway.app/http://api.program.taktix.co.id/program/${id}/tryout`,
+          `http://localhost:3500/programs/tryout/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -45,7 +48,7 @@ export default function TryOut() {
     }
   }, [id]);
 
-  if (!tryouts.length) return <p>Loading...</p>;
+  // if (!tryouts.length) return <p>Loading...</p>;
 
   return (
     <div className="mx-40 my-14">
@@ -81,26 +84,28 @@ export default function TryOut() {
               alt="Tryout Status"
             /> */}
             <div className="left-[44px] top-[14px] absolute text-black text-base font-medium">
-              {tryout.name}
+              {tryout.title}
             </div>
             <div className="left-[80px] top-[43px] absolute text-neutral-400 text-base font-normal">
-              Dari {new Date(tryout.start_date).toLocaleDateString("id-ID")}
+              Dari {new Date(tryout.created_at).toLocaleDateString("id-ID")}
             </div>
             <div className="left-[80px] top-[66px] absolute text-neutral-400 text-base font-normal">
-              Sampai {new Date(tryout.end_date).toLocaleDateString("id-ID")}
+              Total soal {tryout.total_question}
             </div>
             <div className="left-[80px] top-[89px] absolute text-neutral-400 text-base font-normal">
-              Total soal {tryout.total_question}, Total durasi{" "}
-              {tryout.total_duration} menit
+              Total durasi {tryout.duration} menit
             </div>
-            <div className="left-[81px] top-[112px] absolute text-neutral-400 text-base font-normal">
+            {/* <div className="left-[81px] top-[112px] absolute text-neutral-400 text-base font-normal">
               {tryout.is_corrected ? "Sudah dinilai" : "Belum dinilai"}
-            </div>
+            </div> */}
             <div className="w-24 h-7 left-[53px] top-[172px] absolute bg-white rounded-2xl border border-stone-300" />
-            <div className="left-[76px] top-[174px] absolute text-black text-base font-normal">
+            <Link
+              href={`/program/detail_tryout/${tryout.id}`}
+              className="left-[76px] top-[174px] absolute text-black text-base font-normal"
+            >
               Masuk
-            </div>
-            <div className="w-2.5 h-2.5 left-[56px] top-[118px] absolute bg-zinc-300 rounded-full" />
+            </Link>
+            {/* <div className="w-2.5 h-2.5 left-[56px] top-[118px] absolute bg-zinc-300 rounded-full" /> */}
             <img
               className="w-6 h-6 left-[49px] top-[41px] absolute"
               src="/Calendar Plus.svg"

@@ -24,7 +24,8 @@ export default function ProgramDetail() {
     const fetchProgramDetail = async (token: string) => {
       try {
         const response = await axios.get(
-          `https://web-production-d612.up.railway.app/http://api.program.taktix.co.id/program/${id}`,
+          // `https://web-production-d612.up.railway.app/http://api.program.taktix.co.id/program/${id}`,
+          `http://localhost:3500/programs/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

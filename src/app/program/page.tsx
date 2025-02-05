@@ -19,14 +19,11 @@ export default function Program() {
   useEffect(() => {
     const fetchPrograms = async (token: string) => {
       try {
-        const response = await axios.get(
-          "https://web-production-d612.up.railway.app/http://api.program.taktix.co.id/program/",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:3500/programs", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         console.log(response);
         setPrograms(response.data.data.programs);
       } catch (error) {
