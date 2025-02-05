@@ -5,6 +5,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import Swal from "sweetalert2";
 
 interface ProgramDetail {
   id: string;
@@ -44,6 +45,25 @@ export default function ProgramDetail() {
       fetchProgramDetail(token);
     }
   }, [id]);
+
+  const handleGroupKonsultasi = () => {
+    Swal.fire({
+      title: "Link Group tidak ada",
+      icon: "warning",
+      confirmButtonText: "OK",
+      confirmButtonColor: "#DC2626", // Warna merah
+    });
+  };
+
+  // Fungsi menampilkan SweetAlert untuk "Party Belajar"
+  const handlePartyBelajar = () => {
+    Swal.fire({
+      title: "Fitur akan tersedia",
+      icon: "info",
+      confirmButtonText: "OK",
+      confirmButtonColor: "#16A34A", // Warna hijau
+    });
+  };
 
   if (!program) return <p>Loading...</p>;
 
@@ -108,7 +128,10 @@ export default function ProgramDetail() {
         </Link>
 
         {/* SVG untuk Group Konsultasi */}
-        <div className="flex flex-col px-1.5 py-3 bg-white rounded-2xl border border-solid border-stone-300">
+        <button
+          onClick={handleGroupKonsultasi}
+          className="flex flex-col px-1.5 py-3 bg-white rounded-2xl border border-solid border-stone-300 cursor-pointer"
+        >
           <img
             loading="lazy"
             src="/Group Konsultasi.svg"
@@ -116,21 +139,26 @@ export default function ProgramDetail() {
             className="self-center aspect-[1.12] w-[53px]"
           />
           <div className="mt-4">Group Konsultasi</div>
-        </div>
+        </button>
 
         {/* SVG untuk Materi */}
-        <div className="flex flex-col px-9 pt-px pb-4 whitespace-nowrap bg-white rounded-2xl border border-solid border-stone-300 max-md:px-5">
-          <img
-            loading="lazy"
-            src="/Materi.svg"
-            alt="Materi"
-            className="self-center w-12 aspect-[0.76]"
-          />
-          <div className="mt-2">Materi</div>
-        </div>
+        <Link href={`/program/materi/${id}`}>
+          <div className="flex flex-col px-9 pt-px pb-4 whitespace-nowrap bg-white rounded-2xl border border-solid border-stone-300 max-md:px-5">
+            <img
+              loading="lazy"
+              src="/Materi.svg"
+              alt="Materi"
+              className="self-center w-12 aspect-[0.76]"
+            />
+            <div className="mt-2">Materi</div>
+          </div>
+        </Link>
 
         {/* SVG untuk Party Belajar */}
-        <div className="flex flex-col px-5 py-3 bg-white rounded-2xl border border-solid border-stone-300">
+        <button
+          onClick={handlePartyBelajar}
+          className="flex flex-col px-5 py-3 bg-white rounded-2xl border border-solid border-stone-300 cursor-pointer"
+        >
           <img
             loading="lazy"
             src="/Party Belajar.svg"
@@ -138,7 +166,7 @@ export default function ProgramDetail() {
             className="self-center aspect-[1.12] w-[54px]"
           />
           <div className="mt-3.5">Party Belajar</div>
-        </div>
+        </button>
 
         {/* SVG untuk Jadwal Pendampingan */}
         <Link href={`/program/agenda/${id}`}>

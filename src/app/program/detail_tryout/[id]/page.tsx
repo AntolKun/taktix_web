@@ -169,12 +169,12 @@ export default function ProgramSoalDetail({ params }: { params: { id: string } }
             >
               Cek History
             </button>
-            <button
+            {/* <button
               onClick={handleBeriRating}
               className="w-[240px] h-[52px] bg-yellow-400 text-white text-xl font-semibold rounded-[20px]"
             >
               Beri Rating
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
