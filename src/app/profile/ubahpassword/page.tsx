@@ -102,6 +102,15 @@ export default function Profile() {
             />
           </button>
         </div>
+
+        <div className="flex justify-center mt-6">
+          <button
+            type="submit"
+            className="px-16 py-3 text-lg font-semibold text-white bg-blue-700 rounded-[30px]"
+          >
+            Simpan
+          </button>
+        </div>
       </div>
     </div>
   );

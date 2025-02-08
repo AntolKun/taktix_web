@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { jwtDecode } from "jwt-decode"; // Correct import for jwt-decode
+import Swal from "sweetalert2"; 
+import axios from "axios";
 
 export default function Profile() {
   const router = useRouter();
@@ -30,6 +32,51 @@ export default function Profile() {
       }
     }
   }, []);
+
+  const handleCheckHistory = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      Swal.fire({
+        icon: "error",
+        title: "Token not found",
+        text: "Please login to check history.",
+      });
+      return;
+    }
+
+    try {
+      // API request untuk cek history berdasarkan soal id
+      const response = await axios.get(
+        `http://localhost:3500/api/historyall`, // URL API untuk cek history
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Menampilkan notifikasi bahwa history ditemukan
+      if (response.data) {
+        Swal.fire({
+          icon: "success",
+          title: "History found",
+          text: "Your exam history is available.",
+        });
+
+        // Navigate to the next page (e.g., Kerjakan Soal)
+        router.push(`/profile/riwayat`);
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching history:", error);
+      Swal.fire({
+        icon: "error",
+        title: "History not found",
+        text: "No history available for this exam.",
+      });
+    }
+  };
 
   return (
     <div className="mx-40 my-14">
@@ -64,15 +111,16 @@ export default function Profile() {
       <div className="mx-auto mt-8 flex flex-col px-5 text-lg font-semibold text-black max-w-[619px]">
         <div className="w-full max-md:max-w-full">Menu</div>
         <div className="justify-center py-3.5 mt-1 w-full text-base bg-white border-b border-solid border-stone-300 max-md:max-w-full">
-          <Link href="">
-            <div className="flex justify-between items-center">
-              <span>Soal Ujian Saya</span>
-              <FontAwesomeIcon
-                icon={faChevronRight}
-                className="size-5 opacity-75"
-              />
-            </div>
-          </Link>
+          <div
+            className="flex justify-between items-center cursor-pointer"
+            onClick={handleCheckHistory}
+          >
+            <span>Soal Ujian Saya</span>
+            <FontAwesomeIcon
+              icon={faChevronRight}
+              className="size-5 opacity-75"
+            />
+          </div>
         </div>
       </div>
 
